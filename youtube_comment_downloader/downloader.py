@@ -6,6 +6,7 @@ import time
 
 import dateparser
 import requests
+from http.cookiejar import MozillaCookieJar
 
 YOUTUBE_VIDEO_URL = 'https://www.youtube.com/watch?v={youtube_id}'
 YOUTUBE_CONSENT_URL = 'https://consent.youtube.com/save'
@@ -22,10 +23,16 @@ YT_HIDDEN_INPUT_RE = r'<input\s+type="hidden"\s+name="([A-Za-z0-9_]+)"\s+value="
 
 class YoutubeCommentDownloader:
 
-    def __init__(self):
+    def __init__(self, cookies = ""):
         self.session = requests.Session()
         self.session.headers['User-Agent'] = USER_AGENT
-        self.session.cookies.set('CONSENT', 'YES+cb', domain='.youtube.com')
+        
+        if cookies != "":
+            cookie_jar = MozillaCookieJar(cookies)
+            cookie_jar.load(ignore_discard=True)
+            self.session.cookies = cookie_jar
+        else:
+            self.session.cookies.set('CONSENT', 'YES+cb', domain='.youtube.com')
 
     def ajax_request(self, endpoint, ytcfg, retries=5, sleep=20, timeout=60):
         url = 'https://www.youtube.com' + endpoint['commandMetadata']['webCommandMetadata']['apiUrl']

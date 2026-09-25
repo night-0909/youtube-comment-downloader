@@ -1,5 +1,5 @@
 # Edits done from original module
-Add cookies support.
+Add cookies support.<br />
 Procedure to export cookies from Youtube : read https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies and https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp
 
 To install this version of youtube-comment-downloader, download all files then type :

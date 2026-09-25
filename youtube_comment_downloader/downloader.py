@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-import json
+import json, os
 import re
 import time
 
@@ -27,13 +27,18 @@ class YoutubeCommentDownloader:
         self.session = requests.Session()
         self.session.headers['User-Agent'] = USER_AGENT
         
-        if cookies != "":
+        user_cookies = False
+        if cookies:
+            if os.path.isfile(cookies):
+                user_cookies = True
+        
+        if user_cookies is False:
+            self.session.cookies.set('CONSENT', 'YES+cb', domain='.youtube.com')
+        else:
             cookie_jar = MozillaCookieJar(cookies)
             cookie_jar.load(ignore_discard=True)
             self.session.cookies = cookie_jar
-        else:
-            self.session.cookies.set('CONSENT', 'YES+cb', domain='.youtube.com')
-
+            
     def ajax_request(self, endpoint, ytcfg, retries=5, sleep=20, timeout=60):
         url = 'https://www.youtube.com' + endpoint['commandMetadata']['webCommandMetadata']['apiUrl']
 
